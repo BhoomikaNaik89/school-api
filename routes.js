@@ -42,32 +42,29 @@ router.post('/addSchool', async (req, res) => {
     if (!isValidString(name)) {
       return res.status(400).json({ error: 'Invalid or missing name' });
     }
+
     if (!isValidString(address)) {
       return res.status(400).json({ error: 'Invalid or missing address' });
     }
+
     if (!isValidLatitude(latitude)) {
       return res.status(400).json({ error: 'Invalid or missing latitude' });
     }
+
     if (!isValidLongitude(longitude)) {
       return res.status(400).json({ error: 'Invalid or missing longitude' });
     }
 
-    const latNum = Number(latitude);
-    const lonNum = Number(longitude);
+    const query =
+      "INSERT INTO schools (name,address,latitude,longitude) VALUES (?,?,?,?)";
 
-    const [result] = await pool.execute(
-      'INSERT INTO schools (name, address, latitude, longitude) VALUES (?, ?, ?, ?)',
-      [name.trim(), address.trim(), latNum, lonNum]
-    );
+    await pool.query(query, [name, address, latitude, longitude]);
 
-    return res.status(201).json({
-      message: 'School added successfully',
-      schoolId: result.insertId
-    });
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error in /addSchool:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    res.json({ message: "School added successfully" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
