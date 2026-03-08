@@ -5,7 +5,7 @@ const routes = require('./routes');
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
@@ -13,9 +13,6 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok' });
-});
 
 app.get('/', (req, res) => {
   res.json({
@@ -27,7 +24,6 @@ app.get('/', (req, res) => {
   });
 });
 
-app.use('/', routes);
 app.use('/', routes);
 
 app.use((err, req, res, next) => {
